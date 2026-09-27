@@ -1,0 +1,12 @@
+# Pins use BCM GPIO numbers. See docs/DESIGN.md for the wiring table.
+robot:
+  name: robot-buddy
+  port: 8080                 # phone opens http://robot-buddy.local:8080 (M4)
+
+motors:
+  left:  {forward: 17, backward: 27, enable: 24, invert: false}
+  right: {forward: 22, backward: 23, enable: 25, invert: false}
+  standby: 5                 # TB6612 STBY; low = driver off
+  max_speed: 1.0             # 4xAA is about 6 V, fine for TT motors
+  kid_mode_speed: 0.6        # cap while kid mode is on (default at boot)
+  watchdog_ms: 500           # stop if no drive command for this long

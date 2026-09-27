@@ -1,0 +1,21 @@
+[project]
+name = "robot-buddy"
+version = "0.1.0"
+description = "Software for Robot Buddy, a Pi Zero 2WD robot"
+requires-python = ">=3.11"
+# On the Pi these come from apt (python3-gpiozero, python3-lgpio, python3-yaml).
+dependencies = ["gpiozero>=2.0", "pyyaml>=6"]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

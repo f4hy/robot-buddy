@@ -1,0 +1,14 @@
+[Unit]
+Description=Robot Buddy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=robot
+WorkingDirectory=/home/robot/robot_buddy
+ExecStart=/usr/bin/python3 -m robot
+Restart=on-failure
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
