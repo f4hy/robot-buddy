@@ -5,7 +5,7 @@ milestone plan: [docs/DESIGN.md](docs/DESIGN.md).
 
 ## Progress
 
-- [ ] **M0** Pi boots headless: SD card, Wi-Fi, SSH ([guide](docs/sd-card-setup.md))
+- [x] **M0** Pi boots headless: SD card, Wi-Fi, SSH ([guide](docs/sd-card-setup.md))
 - [ ] **M1** Code on the Pi: `deploy.sh`, `provision.sh base`, hello service logs at boot
 - [ ] **M2** Motors on the bench: `check_motors.py` spins each wheel the right way
 - [ ] **M3** Drive from the laptop: keyboard teleop over SSH, watchdog stops it
@@ -24,6 +24,7 @@ Laptop:
 uv run --group dev pytest                                   # tests
 ROBOT_FAKE_HW=1 uv run python scripts/check_motors.py       # mock motor check
 scripts/deploy.sh                                           # copy to the Pi, restart
+ROBOT_HOST=robot@192.168.1.213 scripts/deploy.sh            # if .local doesn't resolve
 ```
 
 Pi (`ssh robot@robot-buddy.local`):
