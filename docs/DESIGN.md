@@ -136,6 +136,34 @@ GPIO 18–21 belong to I2S audio, so the motors use software PWM on GPIO 24 and
 | Mic power              | 3.3 V    | 1            | Mic 3V; mic SEL to GND        | M7 |
 | Ground                 | GND      | 6, 9, 39     | TB6612 GND, AA −, amp, mic    | M2 |
 
+Header map (board face up, SD card slot on the left, header along the top).
+Pin 1 has the square solder pad; odd pins are the inner row, even pins the
+row at the board edge. Run `pinout` on the Pi for the same map.
+
+```
+ Robot use          Name     Pin  Pin  Name     Robot use
+ Mic 3V (M7)        3V3        1    2  5V       Amp VCC (M5)
+                    GPIO2      3    4  5V
+                    GPIO3      5    6  GND      TB6612 GND + AA −
+                    GPIO4      7    8  GPIO14
+ (spare GND)        GND        9   10  GPIO15
+ TB6612 AIN1        GPIO17    11   12  GPIO18   I2S BCLK (M5)
+ TB6612 AIN2        GPIO27    13   14  GND
+ TB6612 BIN1        GPIO22    15   16  GPIO23   TB6612 BIN2
+ TB6612 VCC         3V3       17   18  GPIO24   TB6612 PWMA
+                    GPIO10    19   20  GND
+                    GPIO9     21   22  GPIO25   TB6612 PWMB
+                    GPIO11    23   24  GPIO8
+                    GND       25   26  GPIO7
+                    GPIO0     27   28  GPIO1
+ TB6612 STBY        GPIO5     29   30  GND
+                    GPIO6     31   32  GPIO12
+                    GPIO13    33   34  GND
+ I2S LRCLK (M5)     GPIO19    35   36  GPIO16
+                    GPIO26    37   38  GPIO20   I2S DIN, mic (M7)
+ Amp/mic GND        GND       39   40  GPIO21   I2S DOUT, amp (M5)
+```
+
 The camera uses the CSI ribbon, not GPIO. AA + goes to TB6612 VM through the
 chassis switch. If a motor spins the wrong way, flip its `invert` flag in
 `config/robot.yaml` instead of rewiring.
