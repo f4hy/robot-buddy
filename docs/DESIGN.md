@@ -165,7 +165,8 @@ row at the board edge. Run `pinout` on the Pi for the same map.
 ```
 
 The camera uses the CSI ribbon, not GPIO. AA + goes to TB6612 VM through the
-chassis switch. If a motor spins the wrong way, flip its `invert` flag in
+chassis switch. Breadboard steps for the battery and motors:
+[wiring-motors.md](wiring-motors.md). If a motor spins the wrong way, flip its `invert` flag in
 `config/robot.yaml` instead of rewiring.
 
 ## Modules
@@ -266,8 +267,9 @@ says "Hmm, I didn't get that."
    which drives both. If the combined overlay fails, you already know the
    speaker wiring is good.
 4. **STBY on a GPIO (GPIO 5, pin 29) instead of tied to 3.3 V.** Software can
-   then disable the driver outright, and it stays low while the program is not
-   running. It costs one wire.
+   then disable the driver outright. GPIO 5 has a default pull-up, so STBY is
+   high whenever the program isn't driving it; the motors still stay stopped
+   because the direction and PWM pins (17, 27, 22, 23, 24, 25) default low.
 5. **One check script per part** (`check_motors.py`, `check_speaker.py`, …)
    instead of a single `hw_check.py`, matching the milestone order. It also
    fixes the original `python -m scripts.hw_check`, which would not run
