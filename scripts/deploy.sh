@@ -12,7 +12,7 @@ ssh -t "$HOST" 'command -v rsync >/dev/null || sudo apt-get install -y rsync'
 
 rsync -az --delete \
   --exclude .git --exclude .venv --exclude __pycache__ --exclude .pytest_cache \
-  --exclude .ruff_cache --exclude .env \
+  --exclude .ruff_cache --exclude .env --exclude pi-logs \
   "$REPO/" "$HOST:robot_buddy/"
 
 ssh "$HOST" 'systemctl is-enabled --quiet robot-buddy 2>/dev/null && sudo systemctl restart robot-buddy || true'

@@ -2,6 +2,8 @@
 robot:
   name: robot-buddy
   port: 8080                 # phone opens http://robot-buddy.local:8080 (M4)
+  buddy_name: updog          # what the robot calls itself; Rowan picks it
+  kid_name: Rowan            # who it greets at startup
 
 motors:
   left:  {forward: 17, backward: 27, enable: 24, invert: false}
@@ -10,3 +12,7 @@ motors:
   max_speed: 1.0             # 4xAA is about 6 V, fine for TT motors
   kid_mode_speed: 0.6        # cap while kid mode is on (default at boot)
   watchdog_ms: 500           # stop if no drive command for this long
+
+audio:
+  device: plughw:CARD=sndrpihifiberry,DEV=0   # I2S amp via the hifiberry-dac overlay (M5)
+  volume: 0.4                # 0-1; the 3 W speaker is loud and draws on the power bank

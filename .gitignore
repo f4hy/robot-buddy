@@ -5,3 +5,6 @@ __pycache__/
 .ruff_cache/
 .env
 *.egg-info/
+
+# Logs and file backups pulled off the Pi's SD card (may hold Wi-Fi secrets)
+pi-logs/

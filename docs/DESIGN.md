@@ -56,6 +56,15 @@ in the checklist in [README.md](../README.md).
 | M9 | Brain                   | Push-to-talk, snapshot, cloud AI → allow-listed moves + speech | "Robot, do a dance!" gets a spoken reply and a dance |
 
 M0–M4 are the original phase 1 without video. M5 and M6 can swap order.
+The speaker hardware (wiring, overlay, `check_speaker.py`) was brought up while
+M2 waited on a soldering iron; it shares no pins with the motors. An early
+`robot/hardware/audio.py` (`say()` plus set phrases) came with it so the robot
+greets Rowan at boot; sound buttons and the "say" box still wait for M4.
+
+The robot's spoken name is `robot.buddy_name` in `config/robot.yaml`
+(currently "updog", Rowan's pick), separate from the hostname `robot.name`.
+Rowan should be able to rename it later: plan is a field on the phone page
+(M4/M5) that writes an override file, not hand-editing YAML.
 
 ## Architecture
 
@@ -166,7 +175,8 @@ row at the board edge. Run `pinout` on the Pi for the same map.
 
 The camera uses the CSI ribbon, not GPIO. AA + goes to TB6612 VM through the
 chassis switch. Breadboard steps for the battery and motors:
-[wiring-motors.md](wiring-motors.md). If a motor spins the wrong way, flip its `invert` flag in
+[wiring-motors.md](wiring-motors.md); speaker:
+[wiring-speaker.md](wiring-speaker.md). If a motor spins the wrong way, flip its `invert` flag in
 `config/robot.yaml` instead of rewiring.
 
 ## Modules

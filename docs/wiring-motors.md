@@ -12,6 +12,12 @@ the battery box switch off (or batteries out).
 Most TB6612FNG breakouts (SparkFun and the common red/purple clones) have two
 rows of 8 pins. The order varies, so go by the printed labels.
 
+**The header pins must be soldered to the board.** They usually ship loose
+(two pin strips with black spacers). Resting the board on unsoldered pins
+makes no reliable contact, so nothing moves, even though it looks plugged in.
+To solder them, push the long ends into the breadboard, sit the board on the
+short ends, and solder from above; the breadboard keeps everything straight.
+
 | Group          | Pins                         | Goes to                          |
 | -------------- | ---------------------------- | -------------------------------- |
 | Pi signals     | AIN1 AIN2 PWMA BIN1 BIN2 PWMB STBY | Pi GPIOs (done)            |
@@ -20,6 +26,33 @@ rows of 8 pins. The order varies, so go by the printed labels.
 | Ground         | GND (2–3 pins, all joined on the board) | Pi GND **and** AA battery **−** |
 | Motor outputs  | AO1 AO2                      | Left motor's two wires           |
 |                | BO1 BO2                      | Right motor's two wires          |
+
+## Battery and switch
+
+The switch goes on the battery's red (+) wire only. Black (−) goes straight to
+ground.
+
+```
+ AA box red (+) ──► switch ──► battery (+) rail ──► TB6612 VM
+ AA box black (−) ───────────► battery (−) rail ──► TB6612 GND (+ Pi GND)
+```
+
+- **2-pin switch** (most rockers): red to one pin, the other pin to the (+)
+  rail. Either way round.
+- **3-pin switch** (most slide switches): middle pin plus one outer pin; leave
+  the other outer pin empty. Red to the middle, outer pin to the (+) rail.
+- **Battery box with a built-in switch:** skip the chassis switch; red goes
+  straight to the (+) rail.
+
+Joining wires: solder and heat-shrink is best on a robot that bumps into
+things. Without an iron, hook the stripped wire through the tab, twist it tight
+and tape it (fine for bench tests). Stranded battery wire is too floppy for a
+breadboard: twist it onto a male jumper and cover the joint, crimp a male pin
+on, or use a lever connector.
+
+Check before connecting VM: on continuity mode, red wire to (+) rail beeps
+only with the switch on. With batteries in and the switch on, the (+) rail
+reads about 6 V against (−) (about 4.8 V with rechargeable NiMH).
 
 ## Breadboard layout
 

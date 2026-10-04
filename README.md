@@ -10,7 +10,7 @@ milestone plan: [docs/DESIGN.md](docs/DESIGN.md).
 - [ ] **M2** Motors on the bench: `check_motors.py` spins each wheel the right way ([wiring](docs/wiring-motors.md))
 - [ ] **M3** Drive from the laptop: keyboard teleop over SSH, watchdog stops it
 - [ ] **M4** Drive from the phone: joystick page, STOP button, starts at boot
-- [ ] **M5** Speaker: sound buttons and "say" box
+- [ ] **M5** Speaker: sound buttons and "say" box ([wiring](docs/wiring-speaker.md))
 - [ ] **M6** Camera: live video on the page
 - [ ] **M7** Microphone: loudness meter, speaker still works
 - [ ] **M8** Behaviours: spin, wiggle, dance, clap-to-go
@@ -33,4 +33,6 @@ Pi (`ssh robot@robot-buddy.local`):
 bash ~/robot_buddy/scripts/provision.sh base   # once, then sudo reboot
 journalctl -u robot-buddy -f                    # logs
 python3 ~/robot_buddy/scripts/check_motors.py   # M2, wheels off the ground
+bash ~/robot_buddy/scripts/provision.sh speaker  # M5, once, then sudo reboot
+python3 ~/robot_buddy/scripts/check_speaker.py  # M5, beep + speech
 ```
