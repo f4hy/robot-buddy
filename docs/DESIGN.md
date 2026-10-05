@@ -253,6 +253,10 @@ says "Hmm, I didn't get that."
 - **Provision:** `scripts/provision.sh <step>` runs on the Pi. `base` (M1)
   installs git, Python and gpiozero/lgpio, and turns off Wi-Fi power saving.
   Later steps add `speaker` (M2), `web` (M3), `camera` (M7) and `mic` (M8).
+  `fastboot` (any time) trims boot: Wi-Fi as a NetworkManager keyfile
+  instead of netplan, no cloud-init, zram-only swap, unused services off;
+  the service starts without waiting for `network-online.target`. Details in
+  [sd-card-setup.md](sd-card-setup.md#6-faster-boot-provisionsh-fastboot).
 - **No venv on the Pi.** The program uses only apt packages
   (`python3-gpiozero`, `python3-aiohttp`, `python3-yaml`, …) and runs as
   `python3 -m robot` from the checkout. The laptop uses `uv` with the same

@@ -101,5 +101,51 @@ config only applies on the first boot, so it never came back by itself.
   **USB** port (it also powers the Pi); once it boots, `screen /dev/ttyACM0
   115200` gives a login prompt (not yet tested on our Pi).
 
+## 6. Faster boot (`provision.sh fastboot`)
+
+Measured on 2026-10-04 with `systemd-analyze`: 2 min 39 s to
+`multi-user.target`, and `robot-buddy` started about 2 min after power-on.
+The Zero has one slow core, so everything at boot queues behind everything
+else. Where the time went:
+
+| Cost | Cause |
+|---|---|
+| ~65 s | NetworkManager rewrote its `/etc/netplan/90-NM-*.yaml` profiles at every boot, each time running `netplan generate` and a systemd daemon-reload (~12 s each, 4 per boot). This is also the write a power cut caught on our first card (section 5). |
+| ~34 s | cloud-init on the critical path, though it only matters for Imager's first boot |
+| ~20 s CPU | `rpi-resize-swap-file` re-running `mkswap` on `/var/swap` (zram+file swap) |
+| ~6 s | `robot-buddy` waiting for `network-online.target` |
+| a few s each | bluetooth, avahi, udisks2, rpi-eeprom-update (the Zero has no EEPROM), keyboard/console setup |
+| ~5 s | Python start, mostly `import aiohttp` (not changed) |
+
+`bash ~/robot_buddy/scripts/provision.sh fastboot` (then `sudo reboot`):
+
+- copies the live Wi-Fi SSID/PSK into
+  `/etc/NetworkManager/system-connections/home-wifi.nmconnection` (the same
+  profile `sd-card-rescue.sh wifi` writes), switches to it, and only once it is
+  up moves the netplan files to `/root/netplan-backup/`;
+- disables cloud-init (`/etc/cloud/cloud-init.disabled`);
+- sets zram-only swap (`/etc/rpi/swap.conf.d/robot-buddy.conf`); running the
+  step again after the reboot deletes the unused `/var/swap`;
+- disables bluetooth, avahi (`robot.local` stops resolving; the router's DNS
+  name `robot` still works), udisks2, rpi-eeprom-update, keyboard/console
+  setup, and the apt-daily and man-db timers;
+- adds `dtoverlay=disable-bt` and `disable_splash=1`, sets
+  `display_auto_detect=0`, and adds `quiet` to `cmdline.txt` (originals
+  saved as `*.before-fastboot`);
+- installs the unit without the `network-online.target` wait.
+
+Result after the reboot: 1 min 4 s to `multi-user.target` (was 2 min 39 s);
+Wi-Fi up at 67 s, "ready to play" at 70 s after power-on (was ~2 min 15 s).
+What's left: NetworkManager still runs `netplan generate` plus one
+daemon-reload (~8 s) at startup even with `/etc/netplan` empty. It is built
+into Debian's NetworkManager, which depends on `netplan.io`, so it stays.
+Python import (~10 s on a cold boot) and the kernel (~11 s) are the next
+biggest pieces.
+
+To undo a piece: `sudo systemctl enable <unit>`, restore the
+`*.before-fastboot` files, or `sudo rm /etc/cloud/cloud-init.disabled`. If
+Wi-Fi fails after the reboot, `sd-card-rescue.sh wifi` writes the same
+keyfile from the laptop.
+
 M0 is done when `ssh robot@robot-buddy.local` works. Next is M1:
 `scripts/deploy.sh` then `ssh robot@robot-buddy.local 'bash ~/robot_buddy/scripts/provision.sh base'`.

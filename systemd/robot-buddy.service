@@ -1,7 +1,8 @@
 [Unit]
 Description=Robot Buddy
-After=network-online.target
-Wants=network-online.target
+# Not network-online.target: the server listens on all addresses, so it can
+# start (and say hello) before Wi-Fi joins.
+After=network.target
 
 [Service]
 User=robot

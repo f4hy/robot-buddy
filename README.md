@@ -39,4 +39,5 @@ python3 ~/robot_buddy/scripts/check_speaker.py  # M2, beep + speech
 python3 ~/robot_buddy/scripts/say.py            # type a line, the robot says it
 bash ~/robot_buddy/scripts/provision.sh web      # M3, once
 python3 ~/robot_buddy/scripts/check_motors.py   # M4, wheels off the ground
+bash ~/robot_buddy/scripts/provision.sh fastboot # faster boot, then sudo reboot
 ```
