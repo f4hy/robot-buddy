@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Copy the working tree to the Pi and restart the service.
-#   scripts/deploy.sh            # uses robot@robot-buddy.local
-#   ROBOT_HOST=robot@192.168.1.50 scripts/deploy.sh
+#   scripts/deploy.sh            # uses robot@robot
+#   ROBOT_HOST=robot@192.168.1.213 scripts/deploy.sh
 set -euo pipefail
 
-HOST="${ROBOT_HOST:-robot@robot-buddy.local}"
+HOST="${ROBOT_HOST:-robot@robot}"
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 
 # First deploy: make sure rsync exists on the Pi.

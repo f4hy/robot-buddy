@@ -20,12 +20,14 @@ robot driven from a phone. Design, pin map and milestone plan are in
 
 ## The Pi
 
-- `ssh robot@192.168.1.213` (hostname `robot-buddy`; `.local` doesn't resolve
-  on this laptop yet). Raspberry Pi OS Lite 13 (Trixie), armv6l, 426 MB RAM,
+- `ssh robot@robot` (hostname `robot`, renamed from `robot-buddy`; the Fios
+  router's DNS resolves it, `.local` doesn't on this laptop). IP 192.168.1.213
+  as a fallback. Raspberry Pi OS Lite 13 (Trixie), armv6l, 426 MB RAM,
   Python 3.13, NetworkManager.
 - Code lives at `~/robot_buddy`, copied by `scripts/deploy.sh`
-  (`ROBOT_HOST=robot@192.168.1.213`). No git pull, no venv on the Pi.
+  (default `ROBOT_HOST=robot@robot`). No git pull, no venv on the Pi.
 - Service: `robot-buddy.service`; logs with `journalctl -u robot-buddy -f`.
+  Phone page: `http://robot` (port 80, via `CAP_NET_BIND_SERVICE` in the unit).
 
 ## Code conventions
 

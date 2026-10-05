@@ -1,4 +1,4 @@
-"""M5 bench test: play a two-tone beep, then the robot introduces itself.
+"""M2 bench test: play a two-tone beep, then the robot introduces itself.
 
 On the Pi:     python3 scripts/check_speaker.py
 On a laptop:   ROBOT_FAKE_HW=1 uv run python scripts/check_speaker.py

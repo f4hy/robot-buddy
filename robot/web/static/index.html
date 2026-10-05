@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#1b2433">
+<title>Robot Buddy</title>
+<style>
+  :root {
+    --bg: #1b2433; --panel: #26324a; --text: #f3f5fa; --muted: #9aa6bf;
+    --accent: #ffb703; --ok: #3ddc84; --bad: #ff5a5f; --stop: #e63946;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overscroll-behavior: none; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+    gap: 14px; user-select: none; -webkit-user-select: none;
+  }
+  header { width: 100%; max-width: 480px; display: flex; align-items: center; gap: 10px; }
+  header h1 { margin: 0; font-size: 1.5rem; flex: 1; text-transform: capitalize; }
+  #conn { font-size: .85rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  #conn::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); }
+  #conn.on::before { background: var(--ok); }
+  #heard {
+    width: 100%; max-width: 480px; background: var(--panel); border-radius: 10px;
+    padding: 8px 12px; font: .9rem ui-monospace, monospace; color: var(--muted);
+  }
+  #joy {
+    position: relative; width: min(78vw, 300px); aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(circle, #2f3d5a 0 60%, #26324a 61%);
+    border: 3px solid #3a4867; touch-action: none; flex-shrink: 0;
+  }
+  #knob {
+    position: absolute; left: 50%; top: 50%; width: 34%; aspect-ratio: 1; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 4px 14px #0008;
+    transform: translate(-50%, -50%); pointer-events: none;
+  }
+  #joy.held #knob { box-shadow: 0 0 0 6px #ffb70355, 0 4px 14px #0008; }
+  button, input { font: inherit; border: 0; border-radius: 12px; }
+  button { cursor: pointer; color: var(--text); background: var(--panel); padding: 12px 16px; }
+  button:active { filter: brightness(1.3); }
+  button:disabled { opacity: .5; }
+  #stop {
+    width: 100%; max-width: 480px; background: var(--stop); font-size: 1.6rem;
+    font-weight: 800; letter-spacing: .1em; padding: 16px;
+  }
+  .row { width: 100%; max-width: 480px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .row button { flex: 1; text-transform: capitalize; }
+  #say input {
+    flex: 1; min-width: 0; padding: 12px; background: #fff; color: #111;
+    user-select: text; -webkit-user-select: text;
+  }
+  #say button { flex: 0 0 auto; background: var(--accent); color: #111; font-weight: 700; }
+  #msg { min-height: 1.3em; font-size: .9rem; color: var(--muted); }
+  #msg.err { color: var(--bad); }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="name">Robot Buddy</h1>
+  <span id="conn">connecting…</span>
+</header>
+<div id="heard">robot heard: –</div>
+<div id="joy"><div id="knob"></div></div>
+<button id="stop">STOP</button>
+<div class="row" id="phrases"></div>
+<form class="row" id="say">
+  <input id="text" maxlength="80" placeholder="Type something to say" autocomplete="off">
+  <button>Say</button>
+</form>
+<div id="msg"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let ws = null;
+let speaking = false;
+
+function send(obj) {
+  if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
+}
+
+function note(text, isError = false) {
+  $("msg").textContent = text;
+  $("msg").className = isError ? "err" : "";
+}
+
+function connect() {
+  ws = new WebSocket(`ws://${location.host}/ws`);
+  ws.onopen = () => { $("conn").textContent = "connected"; $("conn").className = "on"; };
+  ws.onclose = () => {
+    $("conn").textContent = "reconnecting…"; $("conn").className = "";
+    setTimeout(connect, 1000);
+  };
+  ws.onmessage = (e) => {
+    const m = JSON.parse(e.data);
+    if (m.type === "status") showStatus(m);
+    else if (m.type === "error") note(m.error, true);
+  };
+}
+
+function showStatus(s) {
+  $("name").textContent = s.name;
+  document.title = s.name;
+  const d = s.drive;
+  const fmt = (v) => (v >= 0 ? "+" : "") + v.toFixed(2);
+  $("heard").textContent = `robot heard: throttle ${fmt(d.throttle)}  turn ${fmt(d.turn)}` +
+    (s.motors ? "" : "  (no motors yet)");
+  speaking = s.speaking;
+  document.querySelectorAll("#phrases button, #say button").forEach((b) => b.disabled = speaking);
+  if (speaking) note(`${s.name} is talking…`);
+  else if ($("msg").textContent.endsWith("talking…")) note("");
+  const box = $("phrases");
+  if (box.dataset.names !== s.phrases.join()) {
+    box.dataset.names = s.phrases.join();
+    box.replaceChildren(...s.phrases.map((name) => {
+      const b = document.createElement("button");
+      b.textContent = `Say “${name}”`;
+      b.onclick = () => send({ type: "phrase", name });
+      return b;
+    }));
+  }
+}
+
+// Joystick: up = throttle +1, right = turn +1. Sends 10x a second while held,
+// and stop on release.
+const joy = $("joy"), knob = $("knob");
+let held = null, pos = { throttle: 0, turn: 0 }, timer = null;
+
+function moveKnob(e) {
+  const r = joy.getBoundingClientRect();
+  const radius = r.width / 2;
+  let x = (e.clientX - r.left - radius) / radius;
+  let y = (e.clientY - r.top - radius) / radius;
+  const len = Math.hypot(x, y);
+  if (len > 1) { x /= len; y /= len; }
+  const dead = (v) => (Math.abs(v) < 0.05 ? 0 : Math.round(v * 100) / 100);
+  pos = { throttle: dead(-y), turn: dead(x) };
+  knob.style.left = `${50 + x * 50}%`;
+  knob.style.top = `${50 + y * 50}%`;
+}
+
+function release() {
+  if (held === null) return;
+  held = null;
+  joy.classList.remove("held");
+  clearInterval(timer);
+  knob.style.left = knob.style.top = "50%";
+  pos = { throttle: 0, turn: 0 };
+  send({ type: "stop" });
+}
+
+joy.addEventListener("pointerdown", (e) => {
+  if (held !== null) return;
+  held = e.pointerId;
+  joy.setPointerCapture(e.pointerId);
+  joy.classList.add("held");
+  moveKnob(e);
+  send({ type: "drive", ...pos });
+  timer = setInterval(() => send({ type: "drive", ...pos }), 100);
+});
+joy.addEventListener("pointermove", (e) => { if (e.pointerId === held) moveKnob(e); });
+joy.addEventListener("pointerup", (e) => { if (e.pointerId === held) release(); });
+joy.addEventListener("pointercancel", (e) => { if (e.pointerId === held) release(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden) release(); });
+
+$("stop").addEventListener("click", () => { release(); send({ type: "stop" }); });
+
+$("say").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = $("text").value.trim();
+  if (!text) return;
+  send({ type: "say", text });
+  $("text").value = "";
+  $("text").blur();
+});
+
+connect();
+</script>
+</body>
+</html>

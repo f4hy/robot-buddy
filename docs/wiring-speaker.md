@@ -1,4 +1,4 @@
-# M5 — Wiring the speaker amp
+# M2 — Wiring the speaker amp
 
 The NS4168 board is an I2S amplifier: the Pi sends it digital audio on three
 pins and it drives the 3 W speaker directly. No soldering needed if its header
@@ -74,5 +74,5 @@ has no volume control of its own; the code scales the sound.
 | Pop at start or end of each sound      | Normal for I2S amps when the clock starts and stops |
 | Pi reboots or Wi-Fi drops on loud sound | Power bank can't supply the peak; lower `audio.volume` |
 
-M5 hardware is done when `check_speaker.py` plays the beep and the sentence.
-The sound buttons and "say" box on the phone come after M4.
+M2 hardware is done when `check_speaker.py` plays the beep and the sentence.
+The phrase buttons and "say" box on the phone come in M3.

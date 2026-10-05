@@ -1,4 +1,4 @@
-# M2 — Wiring the TB6612 to the battery and motors
+# M4 — Wiring the TB6612 to the battery and motors
 
 The Pi-to-TB6612 signal wires are already done (pin map in
 [DESIGN.md](DESIGN.md#pin-map)). This guide adds the last three groups: ground,
@@ -129,4 +129,4 @@ board (long leg to VM), smooths motor spikes. Nice to have, not required.
 | One wheel never moves                    | Check that motor's two wires and its PWM wire (PWMA pin 18 / PWMB pin 22) |
 | Pi reboots when the motors start         | Battery wired to the Pi by mistake, or the power bank is weak; recheck the first item above |
 
-M2 is done when each wheel spins forward and backward in the right direction.
+M4 is done when each wheel spins forward and backward in the right direction.

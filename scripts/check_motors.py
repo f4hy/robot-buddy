@@ -1,4 +1,4 @@
-"""M2 bench test: spin each wheel forward then backward. Wheels off the ground!
+"""M4 bench test: spin each wheel forward then backward. Wheels off the ground!
 
 On the Pi:     python3 scripts/check_motors.py
 On a laptop:   ROBOT_FAKE_HW=1 uv run python scripts/check_motors.py

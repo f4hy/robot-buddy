@@ -1,7 +1,7 @@
 # Pins use BCM GPIO numbers. See docs/DESIGN.md for the wiring table.
 robot:
-  name: robot-buddy
-  port: 8080                 # phone opens http://robot-buddy.local:8080 (M4)
+  name: robot                # hostname; the home router's DNS resolves it
+  port: 80                   # phone opens http://robot (M3); ROBOT_PORT overrides
   buddy_name: updog          # what the robot calls itself; Rowan picks it
   kid_name: Rowan            # who it greets at startup
 
@@ -14,5 +14,5 @@ motors:
   watchdog_ms: 500           # stop if no drive command for this long
 
 audio:
-  device: plughw:CARD=sndrpihifiberry,DEV=0   # I2S amp via the hifiberry-dac overlay (M5)
-  volume: 0.4                # 0-1; the 3 W speaker is loud and draws on the power bank
+  device: plughw:CARD=sndrpihifiberry,DEV=0   # I2S amp via the hifiberry-dac overlay (M2)
+  volume: 0.1                # 0-1; the 3 W speaker is loud and draws on the power bank

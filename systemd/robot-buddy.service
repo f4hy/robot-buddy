@@ -7,7 +7,10 @@ Wants=network-online.target
 User=robot
 WorkingDirectory=/home/robot/robot_buddy
 ExecStart=/usr/bin/python3 -m robot
-Restart=on-failure
+Restart=always
+# Port 80 for http://robot without running as root.
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+RestartSec=2
 Environment=PYTHONUNBUFFERED=1
 
 [Install]

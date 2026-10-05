@@ -3,15 +3,17 @@ name = "robot-buddy"
 version = "0.1.0"
 description = "Software for Robot Buddy, a Pi Zero 2WD robot"
 requires-python = ">=3.11"
-# On the Pi these come from apt (python3-gpiozero, python3-lgpio, python3-yaml).
-dependencies = ["gpiozero>=2.0", "pyyaml>=6"]
+# On the Pi these come from apt (python3-gpiozero, python3-lgpio, python3-yaml,
+# python3-aiohttp). Trixie ships aiohttp 3.11.
+dependencies = ["aiohttp>=3.11", "gpiozero>=2.0", "pyyaml>=6"]
 
 [dependency-groups]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=8", "pytest-aiohttp>=1.0", "ruff>=0.6"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 100

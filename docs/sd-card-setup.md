@@ -19,7 +19,8 @@ rpi-imager
 3. **Storage:** the SD card. On this laptop the reader is `/dev/sde`
    (`SD/MMC CRW`); check the size matches your card before writing.
 4. **Customisation:**
-   - Hostname: `robot-buddy`
+   - Hostname: `robot-buddy` (later renamed to `robot` with
+     `sudo hostnamectl set-hostname robot`, so the phone can open `http://robot`)
    - Username `robot`, plus a password (needed for `sudo`)
    - Wi-Fi: your 2.4 GHz network (the Zero W has no 5 GHz), country `US`
    - Enable SSH, public-key only, using `~/.ssh/id_rsa.pub`
