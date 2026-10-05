@@ -35,4 +35,5 @@ journalctl -u robot-buddy -f                    # logs
 python3 ~/robot_buddy/scripts/check_motors.py   # M2, wheels off the ground
 bash ~/robot_buddy/scripts/provision.sh speaker  # M5, once, then sudo reboot
 python3 ~/robot_buddy/scripts/check_speaker.py  # M5, beep + speech
+python3 ~/robot_buddy/scripts/say.py            # type a line, the robot says it
 ```
