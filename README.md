@@ -8,7 +8,7 @@ milestone plan: [docs/DESIGN.md](docs/DESIGN.md).
 - [x] **M0** Pi boots headless: SD card, Wi-Fi, SSH ([guide](docs/sd-card-setup.md))
 - [x] **M1** Code on the Pi: `deploy.sh`, `provision.sh base`, hello service logs at boot
 - [x] **M2** Speaker on the bench: `check_speaker.py` beeps and talks, `say.py` over SSH ([wiring](docs/wiring-speaker.md))
-- [ ] **M3** Phone app: control page with joystick (logged only, no motors yet), STOP, phrase buttons and "say" box, starts at boot
+- [x] **M3** Phone app: control page with joystick (logged only, no motors yet), STOP, phrase buttons and "say" box, starts at boot
 - [ ] **M4** Motors on the bench: `check_motors.py` spins each wheel the right way ([wiring](docs/wiring-motors.md))
 - [ ] **M5** Drive from the laptop: keyboard teleop over SSH, watchdog stops it
 - [ ] **M6** Drive from the phone: joystick moves the wheels, STOP always works, kid mode
